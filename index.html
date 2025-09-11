@@ -1871,12 +1871,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try{
           const stream = q.video.srcObject;
           q.recordedChunks = [];
-          q.recorder = new MediaRecorder(stream, { mimeType: 'video/mp4; codecs=vp8' });
+          q.recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8' });
           q.recorder.ondataavailable = e => { if(e.data && e.data.size) q.recordedChunks.push(e.data); };
           q.recorder.onstop = () => {
-            const blob = new Blob(q.recordedChunks, { type: 'video/mp4' });
+            const blob = new Blob(q.recordedChunks, { type: 'video/webm' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'Videocamera_monitor.mp4'; a.click();
+            const a = document.createElement('a'); a.href = url; a.download = 'Videocamera_monitor.webm'; a.click();
             setTimeout(()=>URL.revokeObjectURL(url), 2000);
           };
           q.recorder.start();
@@ -1895,12 +1895,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const fps = Math.min(60, Math.max(5, parseInt(q.sliderVel.value || 30)));
         const stream = q.canvas.captureStream(fps);
         q.recordedChunks = [];
-        q.recorder = new MediaRecorder(stream, { mimeType: 'video/mp4; codecs=vp9' });
+        q.recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
         q.recorder.ondataavailable = e => { if(e.data && e.data.size) q.recordedChunks.push(e.data); };
         q.recorder.onstop = () => {
-          const blob = new Blob(q.recordedChunks, { type: 'video/mp4' });
+          const blob = new Blob(q.recordedChunks, { type: 'video/webm' });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = `Monitor_recording.mp4`; a.click();
+          const a = document.createElement('a'); a.href = url; a.download = `Monitor_recording.webm`; a.click();
           setTimeout(()=>URL.revokeObjectURL(url), 2000);
         };
         q.recorder.start();
@@ -2443,6 +2443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
