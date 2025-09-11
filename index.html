@@ -1876,7 +1876,7 @@ document.addEventListener('DOMContentLoaded', () => {
           q.recorder.onstop = () => {
             const blob = new Blob(q.recordedChunks, { type: 'video/webm' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'videocamera_quadrante.webm'; a.click();
+            const a = document.createElement('a'); a.href = url; a.download = 'Videocamera_monitor.webm'; a.click();
             setTimeout(()=>URL.revokeObjectURL(url), 2000);
           };
           q.recorder.start();
@@ -1900,7 +1900,7 @@ document.addEventListener('DOMContentLoaded', () => {
         q.recorder.onstop = () => {
           const blob = new Blob(q.recordedChunks, { type: 'video/webm' });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = `quadrante_recording.webm`; a.click();
+          const a = document.createElement('a'); a.href = url; a.download = `Monitor_recording.webm`; a.click();
           setTimeout(()=>URL.revokeObjectURL(url), 2000);
         };
         q.recorder.start();
@@ -2443,4 +2443,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
