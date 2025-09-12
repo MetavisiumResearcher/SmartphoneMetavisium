@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!-- iOS: Nasconde la barra del browser -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Android: Abilita modalità standalone (PWA) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000">
 <title>MetaVisium By DP</title>
 <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -123,7 +130,7 @@
     display:block;
     object-fit:cover;
   }
-  #settings-banner {
+#settings-banner {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -138,7 +145,9 @@
     overflow-y: auto;
     display: none;
     transition: all 0.3s ease;
-  }
+    /* 👇 Aggiungi questa riga */
+    box-sizing: border-box;
+}
   #settings-banner.active {
     display: block;
   }
@@ -337,25 +346,31 @@
     gap: 10px;
     padding: 10px 0;
   }
-  #video-frame-canvas-container {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #000;
-    border: 1px solid var(--neon-green);
-    overflow: hidden;
-    cursor: grab;
-    position: relative;
-  }
-  #video-frame-canvas {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    transition: transform 0.1s ease;
-    user-select: none;
-    display: block;
-  }
+
+#video-frame-canvas-container {
+  width: 100%;
+  max-height: 50vh;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--neon-green);
+  cursor: grab;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#video-frame-canvas {
+  max-width: 100%;
+  max-height: 100%;
+  /* transition: transform 0.1s ease; */
+  /* user-select: none; */
+  /* display: block; */
+  /* object-fit: contain; */
+  /* Questi sono gestiti dal JS! */
+}
   #video-frame-controls {
     width: 100%;
     background: var(--panel);
@@ -367,6 +382,165 @@
     gap: 10px;
     box-sizing: border-box;
   }
+  /* 👇 STILE CYBERPUNK NEON PER I BOTTONI DEL VIDEO FRAME */
+.cyberpunk-btn {
+    background: transparent !important;
+    border: 2px solid var(--neon-green) !important;
+    color: var(--neon-green) !important;
+    font-family: 'Courier New', monospace;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    padding: 8px 14px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green) !important;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+    transition: all 0.3s ease !important;
+    letter-spacing: 1px !important;
+    min-width: 120px;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.cyberpunk-btn::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px solid var(--neon-green);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    animation: pulse-neon 2s infinite alternate;
+}
+
+.cyberpunk-btn:hover {
+    color: var(--neon-blue) !important;
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7) !important;
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue) !important;
+    transform: scale(1.05) !important;
+}
+
+.cyberpunk-btn:hover::before {
+    opacity: 1;
+}
+
+@keyframes pulse-neon {
+    from { opacity: 0.3; transform: scale(1); }
+    to   { opacity: 0.9; transform: scale(1.1); }
+}
+
+/* Effetto flicker leggero per realismo */
+.cyberpunk-btn:nth-child(3) { animation: flicker 3s infinite; } /* Crea Fotogrammi */
+.cyberpunk-btn:nth-child(4) { animation: flicker 4s infinite 0.5s; } /* Annulla */
+.cyberpunk-btn:nth-child(6) { animation: flicker 3.5s infinite 1s; } /* Indietro */
+.cyberpunk-btn:nth-child(7) { animation: flicker 4.5s infinite 1.5s; } /* Avanti */
+.cyberpunk-btn:nth-child(8) { animation: flicker 3s infinite 2s; } /* Negativo */
+.cyberpunk-btn:nth-child(9) { animation: flicker 4s infinite 2.5s; } /* Grigio */
+.cyberpunk-btn:nth-child(10) { animation: flicker 3.5s infinite 3s; } /* UV */
+.cyberpunk-btn:nth-child(11) { animation: flicker 4s infinite 3.5s; } /* Specchio */
+.cyberpunk-btn:nth-child(12) { animation: flicker 3s infinite 4s; } /* Reset */
+.cyberpunk-btn:nth-child(13) { animation: flicker 4.5s infinite 4.5s; } /* Tutti i Frame */
+.cyberpunk-btn:nth-child(14) { animation: flicker 3.5s infinite 5s; } /* Salva */
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    49% { opacity: 0.9; }
+    51% { opacity: 0.7; }
+    53% { opacity: 0.9; }
+    55% { opacity: 0.6; }
+    57% { opacity: 0.9; }
+    59% { opacity: 0.7; }
+    61% { opacity: 0.9; }
+    63% { opacity: 0.8; }
+    65% { opacity: 0.9; }
+}
+
+/* Rendi più piccoli i bottoni .small */
+.cyberpunk-btn.small {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    min-width: 100px !important;
+}
+/* 👇 STILE CYBERPUNK PER IL BOTTONE FILE NASCOSTO */
+.file-input-container {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.file-input-container input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.cyberpunk-file-label {
+    font-family: 'Courier New', monospace;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: var(--neon-green) !important;
+    text-shadow: 0 0 3px var(--neon-green), 0 0 6px var(--neon-green) !important;
+    padding: 8px 14px !important;
+    border: 2px solid var(--neon-green) !important;
+    background: transparent !important;
+    border-radius: 6px !important;
+    display: inline-block;
+    cursor: pointer;
+    letter-spacing: 1px;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+    position: relative;
+    z-index: 1;
+
+}
+
+.cyberpunk-file-label:hover {
+    color: var(--neon-blue) !important;
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7) !important;
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue) !important;
+    transform: scale(1.05) !important;
+}
+
+.cyberpunk-file-label:hover::before {
+    opacity: 1;
+}
+#extractionFps {
+    font-family: 'Courier New', monospace;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: var(--neon-green) !important;
+    text-shadow: 0 0 3px var(--neon-green), 0 0 6px var(--neon-green) !important;
+    background: transparent !important;
+    border: 2px solid var(--neon-green) !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    cursor: pointer !important;
+    min-width: 120px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+    transition: all 0.3s ease !important;
+}
+
+#extractionFps:hover,
+#extractionFps:focus {
+    color: var(--neon-blue) !important;
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7) !important;
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue) !important;
+}
   .frame-nav {
     display: flex;
     gap: 6px;
@@ -466,7 +640,7 @@
   .frame-thumbnail {
     border: 1px solid var(--neon-green);
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s;
   }
   .frame-thumbnail:hover {
     transform: scale(1.03);
@@ -536,9 +710,6 @@
     }
     footer {
       display: block;
-    }
-    #video-frame-canvas-container {
-      aspect-ratio: auto;
     }
     #video-frame-content {
       flex-direction: row;
@@ -625,39 +796,38 @@
         <div id="video-frame-canvas-container">
             <canvas id="video-frame-canvas"></canvas>
         </div>
-        <div id="video-frame-controls">
-            <div>
-                <label for="videoFileInput">Carica Video:</label>
-                <input type="file" id="videoFileInput" accept="video/*" />
-            </div>
-            <div>
-              <label for="extractionFps">FPS Estrazione:</label>
-              <select id="extractionFps">
-                <option value="1">1 FPS</option>
-                <option value="2">2 FPS</option>
-                <option value="5">5 FPS</option>
-                <option value="10" selected>10 FPS</option>
-                <option value="15">15 FPS</option>
-                <option value="30">30 FPS</option>
-              </select>
-            </div>
-            <button id="create-frames-btn">Crea Fotogrammi</button>
-            <button id="cancel-frames-btn" class="small" style="display: none;">Annulla Fotogrammi</button>
-            <div class="frame-info" id="frameInfo">Frame 0 / 0</div>
-            <div class="frame-nav">
-                <button id="prevFrame">⏮️ Indietro</button>
-                <button id="nextFrame">Avanti ⏭️</button>
-            </div>
-            <div class="filter-controls">
-                <button id="applyNegative">Negativo</button>
-                <button id="applyGrayscale">Scala di Grigi</button>
-                <button id="applyUV">Filtro UV</button>
-                <button id="applyMirror">Specchio</button>
-                <button id="resetFilters">Reset Filtri</button>
-            </div>
-            <button id="viewAllFrames" class="small">Tutti i Fotogrammi</button>
-            <button id="saveFrame" class="small">Salva Fotogramma</button>
-        </div>
+<div id="video-frame-controls">
+<div class="file-input-container">
+    <label for="videoFileInput" class="cyberpunk-file-label">Carica Video</label>
+    <input type="file" id="videoFileInput" accept="video/*" />
+</div>
+  <label for="extractionFps" style="color: var(--neon-blue); text-shadow: 0 0 4px var(--neon-blue), 0 0 8px var(--neon-blue); font-family: 'Courier New', monospace; font-weight: bold; font-size: 12px;">FPS Estrazione:</label>
+  <select id="extractionFps" style="font-family: 'Courier New', monospace; font-size: 12px; color: var(--neon-green); background: transparent; border: 2px solid var(--neon-green); border-radius: 6px; padding: 6px 10px; min-width: 120px; box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);">
+    <option value="1">1 FPS</option>
+    <option value="2">2 FPS</option>
+    <option value="5">5 FPS</option>
+    <option value="10" selected>10 FPS</option>
+    <option value="15">15 FPS</option>
+    <option value="30">30 FPS</option>
+  </select>
+</div>
+    <button id="create-frames-btn" class="cyberpunk-btn">🔍 Crea Fotogrammi</button>
+    <button id="cancel-frames-btn" class="cyberpunk-btn small" style="display: none;">🚫 Annulla Fotogrammi</button>
+    <div class="frame-info" id="frameInfo">Frame 0 / 0</div>
+    <div class="frame-nav">
+        <button id="prevFrame" class="cyberpunk-btn">⏮️ Indietro</button>
+        <button id="nextFrame" class="cyberpunk-btn">Avanti ⏭️</button>
+    </div>
+    <div class="filter-controls">
+        <button id="applyNegative" class="cyberpunk-btn">🌑 Negativo</button>
+        <button id="applyGrayscale" class="cyberpunk-btn">🖤 Scala Grigi</button>
+        <button id="applyUV" class="cyberpunk-btn">🔮 Filtro UV</button>
+        <button id="applyMirror" class="cyberpunk-btn">🪞 Specchio</button>
+        <button id="resetFilters" class="cyberpunk-btn">🔄 Reset Filtri</button>
+    </div>
+    <button id="viewAllFrames" class="cyberpunk-btn small">🖼️ Mostra Primi 50 Fotogrammi</button>
+    <button id="saveFrame" class="cyberpunk-btn small">💾 Salva Fotogramma</button>
+</div>
     </div>
 </div>
 <div id="all-frames-modal" class="modal">
@@ -1109,7 +1279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const angle = Math.atan2(dy, dx);
         const swirlFactor = 0.015 * (parseFloat(q.sliderTurb.value)/50 + 0.5) * espansione;
         const swirlX = x/scale + swirlFactor * distance * Math.cos(angle + t*1.5);
-        const swirlY = y/scale + swirlFactor * distance * Math.sin(angle + t*1.5);
+        const swirlY = y/scale + swirlFactor * distance * Math.sin(angle + t*1.8);
         let v = 0, amp=1, freq=1;
         for(let o=0; o<4; o++){
           if(reduce){
@@ -2069,12 +2239,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let dragStartX = 0;
   let dragStartY = 0;
   let shouldCancelExtraction = false;
+  let initialDistance = 0;
+
   videoFrameBtn.addEventListener('click', async () => {
     document.getElementById('main').style.display = 'none';
     videoFramePage.classList.add('active');
     fullscreenBtn.style.display = 'none';
     exitFullscreenBtn.style.display = 'none';
   });
+
   backToMainBtn.addEventListener('click', () => {
     videoFramePage.classList.remove('active');
     document.getElementById('main').style.display = 'flex';
@@ -2110,38 +2283,87 @@ document.addEventListener('DOMContentLoaded', () => {
       fullscreenBtn.style.display = 'block';
     }
   });
-  videoFileInput.addEventListener('change', function(e) {
+
+videoFileInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
+
+    // 👇 RESET COMPLETO ANCHE QUI!
+    videoFrames = [];
+    currentFrameIndex = 0;
+    totalFramesExtracted = 0;
+    zoomLevel = 1.0;
+    canvasOffsetX = 0;
+    canvasOffsetY = 0;
+    resetFilterStates();
+    updateFrameInfo();
+    applyCanvasTransform();
+    if (videoFrameCanvas && videoFrameCtx) {
+      videoFrameCtx.clearRect(0, 0, videoFrameCanvas.width, videoFrameCanvas.height);
+    }
+
     const url = URL.createObjectURL(file);
     if (videoElement) {
       videoElement.pause();
       videoElement.src = '';
+      videoElement.load();
     }
     videoElement = document.createElement('video');
     videoElement.src = url;
-  });
-  createFramesBtn.addEventListener('click', async function() {
+});
+
+createFramesBtn.addEventListener('click', async function() {
     if (!videoElement) {
       alert("Carica prima un video.");
       return;
     }
+
+    // Ferma eventuali estrazioni in corso
+    shouldCancelExtraction = true;
+
+    // Svuota gli array e resetta le variabili
+    videoFrames = [];
+    currentFrameIndex = 0;
+    totalFramesExtracted = 0;
+    zoomLevel = 1.0;
+    canvasOffsetX = 0;
+    canvasOffsetY = 0;
+    resetFilterStates();
+
+    // Pulisci il canvas
+    if (videoFrameCanvas && videoFrameCtx) {
+      videoFrameCtx.clearRect(0, 0, videoFrameCanvas.width, videoFrameCanvas.height);
+    }
+
+    // Aggiorna l'interfaccia utente
+    updateFrameInfo();
+    applyCanvasTransform();
+
+    // Disattiva il bottone e avvia l'estrazione
     this.disabled = true;
     this.textContent = "Creazione in corso...";
+
+    // Avvia l'estrazione dei nuovi fotogrammi
     await extractFrames();
+
+    // Ripristina lo stato del bottone
     this.disabled = false;
     this.textContent = "Crea Fotogrammi";
+
+    // Mostra il primo fotogramma se estratto
     if (videoFrames.length > 0) {
       renderCurrentFrame();
       updateFrameInfo();
     }
-  });
+});
+
   document.getElementById('cancel-frames-btn').addEventListener('click', function() {
     shouldCancelExtraction = true;
     this.style.display = 'none';
     document.getElementById('create-frames-btn').disabled = false;
     document.getElementById('create-frames-btn').textContent = "Crea Fotogrammi";
   });
+
   async function extractFrames() {
     if (!videoElement) return;
     const duration = videoElement.duration;
@@ -2180,6 +2402,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCurrentFrame();
     }
   }
+
   function seekAndCaptureFrame(time, frameIndex) {
     return new Promise((resolve) => {
       videoElement.currentTime = time;
@@ -2196,9 +2419,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const handler = () => {
           if (Math.abs(videoElement.currentTime - time) < 0.1) {
             videoElement.removeEventListener('timeupdate', handler);
+     
             const canvas = document.createElement('canvas');
-            canvas.width = 600;
-            canvas.height = Math.round(600 * (videoElement.videoHeight / videoElement.videoWidth));
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
             resolve(canvas);
@@ -2208,62 +2432,101 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
   function updateFrameInfo() {
     frameInfo.textContent = `Frame ${currentFrameIndex + 1} / ${totalFramesExtracted}`;
   }
+
   function applyCanvasTransform() {
     videoFrameCanvas.style.transform = `translate(${canvasOffsetX}px, ${canvasOffsetY}px) scale(${zoomLevel})`;
+    clampOffset();
   }
-  function renderCurrentFrame() {
+
+function renderCurrentFrame() {
     if (videoFrames.length === 0 || currentFrameIndex >= videoFrames.length) return;
+
     const frameCanvas = videoFrames[currentFrameIndex];
-    const displayWidth = 600;
-    const displayHeight = Math.round(displayWidth * (frameCanvas.height / frameCanvas.width));
-    videoFrameCanvas.width = displayWidth;
-    videoFrameCanvas.height = displayHeight;
-    videoFrameCtx.clearRect(0, 0, videoFrameCanvas.width, videoFrameCanvas.height);
-    if (isMirrorActive) {
-      videoFrameCtx.save();
-      videoFrameCtx.scale(-1, 1);
-      videoFrameCtx.drawImage(frameCanvas, 0, 0, frameCanvas.width, frameCanvas.height, -displayWidth, 0, displayWidth, displayHeight);
-      videoFrameCtx.restore();
+    const videoWidth = frameCanvas.width;
+    const videoHeight = frameCanvas.height;
+
+    const canvas = videoFrameCanvas;
+    const ctx = videoFrameCtx;
+
+   
+    const containerWidth = canvas.clientWidth;
+    const containerHeight = canvas.clientHeight;
+
+    // Calcola il rapporto d'aspetto
+    const videoRatio = videoWidth / videoHeight;
+    const containerRatio = containerWidth / containerHeight;
+
+    let destWidth, destHeight, destX, destY;
+
+    if (videoRatio > containerRatio) {
+        // video più largo → limita alla larghezza
+        destWidth = containerWidth;
+        destHeight = destWidth / videoRatio;
     } else {
-      videoFrameCtx.drawImage(frameCanvas, 0, 0, frameCanvas.width, frameCanvas.height, 0, 0, displayWidth, displayHeight);
+        // video più alto → limita all'altezza
+        destHeight = containerHeight;
+        destWidth = destHeight * videoRatio;
     }
+
+    // Centra l'immagine
+    destX = (containerWidth - destWidth) / 2;
+    destY = (containerHeight - destHeight) / 2;
+
+    // Pulisci il canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Disegna specchiato o normale
+    if (isMirrorActive) {
+        ctx.save();
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(frameCanvas, 0, 0, videoWidth, videoHeight, destX, destY, destWidth, destHeight);
+        ctx.restore();
+    } else {
+        ctx.drawImage(frameCanvas, 0, 0, videoWidth, videoHeight, destX, destY, destWidth, destHeight);
+    }
+
+    // Applica filtri
     if (isNegativeActive || isGrayscaleActive || isUVActive) {
-      const imgData = videoFrameCtx.getImageData(0, 0, videoFrameCanvas.width, videoFrameCanvas.height);
-      const data = imgData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        let r = data[i], g = data[i+1], b = data[i+2];
-        if (isNegativeActive) {
-          r = 255 - r; g = 255 - g; b = 255 - b;
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i], g = data[i+1], b = data[i+2];
+            if (isNegativeActive) { r = 255 - r; g = 255 - g; b = 255 - b; }
+            if (isGrayscaleActive) { const avg = (r+g+b)/3; r=g=b=avg; }
+            if (isUVActive) { r*=0.7; g*=0.8; b*=1.5; }
+            data[i] = Math.min(255, Math.max(0, r));
+            data[i+1] = Math.min(255, Math.max(0, g));
+            data[i+2] = Math.min(255, Math.max(0, b));
         }
-        if (isGrayscaleActive) {
-          const avg = (r + g + b) / 3;
-          r = g = b = avg;
-        }
-        if (isUVActive) {
-          r = r * 0.7; g = g * 0.8; b = b * 1.5;
-        }
-        data[i] = Math.min(255, Math.max(0, r));
-        data[i+1] = Math.min(255, Math.max(0, g));
-        data[i+2] = Math.min(255, Math.max(0, b));
-      }
-      videoFrameCtx.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
     }
-    applyCanvasTransform();
-  }
+
+    // Reset zoom/offset (se usi trasformazioni extra)
+    zoomLevel = 1.0;
+    canvasOffsetX = 0;
+    canvasOffsetY = 0;
+    applyCanvasTransform(); // opzionale
+}
+
+
   function navigateFrame(delta) {
     currentFrameIndex = Math.max(0, Math.min(videoFrames.length - 1, currentFrameIndex + delta));
     updateFrameInfo();
     renderCurrentFrame();
   }
+
   prevFrameBtn.addEventListener('click', () => {
     navigateFrame(-1);
   });
   nextFrameBtn.addEventListener('click', () => {
     navigateFrame(1);
   });
+
   document.addEventListener('keydown', function(event) {
     if (!videoFramePage.classList.contains('active')) return;
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -2275,6 +2538,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navigateFrame(1);
     }
   });
+
   applyNegativeBtn.addEventListener('click', () => {
     isNegativeActive = !isNegativeActive;
     applyNegativeBtn.classList.toggle('active', isNegativeActive);
@@ -2299,6 +2563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetFilterStates();
     renderCurrentFrame();
   });
+
   function resetFilterStates() {
     isNegativeActive = false;
     isGrayscaleActive = false;
@@ -2309,12 +2574,14 @@ document.addEventListener('DOMContentLoaded', () => {
     applyUVBtn.classList.remove('active');
     applyMirrorBtn.classList.remove('active');
   }
+
   saveFrameBtn.addEventListener('click', () => {
     const link = document.createElement('a');
     link.download = `frame_${currentFrameIndex + 1}.png`;
     link.href = videoFrameCanvas.toDataURL('image/png', 1.0);
     link.click();
   });
+
   viewAllFramesBtn.addEventListener('click', () => {
     if (videoFrames.length === 0) {
       alert("Nessun fotogramma da visualizzare.");
@@ -2351,10 +2618,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     allFramesModal.style.display = 'block';
   });
+
   closeAllFramesBtn.addEventListener('click', () => {
     allFramesModal.style.display = 'none';
   });
+
   const canvasContainer = document.getElementById('video-frame-canvas-container');
+
   function clampOffset() {
     const containerRect = canvasContainer.getBoundingClientRect();
     const canvasRect = videoFrameCanvas.getBoundingClientRect();
@@ -2365,15 +2635,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const minY = containerRect.height - canvasRect.height;
     canvasOffsetY = Math.min(maxY, Math.max(minY, canvasOffsetY));
   }
+
   function getDistance(touches) {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx*dx + dy*dy);
   }
-  function applyCanvasTransform() {
-    canvasContainer.style.transform = `translate(${canvasOffsetX}px, ${canvasOffsetY}px) scale(${zoomLevel})`;
-    clampOffset();
-  }
+
   canvasContainer.addEventListener('mousedown', (e) => {
     if (e.button === 0) {
       isDragging = true;
@@ -2433,6 +2701,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   canvasContainer.style.cursor = 'grab';
+
   const toggleSettingsBtn = document.getElementById('toggle-settings-btn');
   toggleSettingsBtn.addEventListener('click', function() {
     settingsBanner.classList.toggle('active');
@@ -2445,12 +2714,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
